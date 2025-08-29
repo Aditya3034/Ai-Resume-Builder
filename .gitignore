@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+*.env
+.env.*
+
+# FastAPI + LangChain
+*.db
+*.sqlite3
+*.json
+*.yaml
+*.yml
+*.cache
+*.pdf
+
+# LangGraph artifacts
+langgraph_traces/
+langsmith_traces/
+*.trace.json
+
+# Jupyter / IPython
+.ipynb_checkpoints/
+*.ipynb
+
+# VS Code / IDEs
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+coverage.xml
+htmlcov/
+.pytest_cache/
+.tox/
+.mypy_cache/
+__snapshots__/
+
+# Node / frontend (if applicable)
+node_modules/
+*.tsbuildinfo
+*.lock

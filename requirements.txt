@@ -1,0 +1,44 @@
+# === Core Framework ===
+fastapi
+uvicorn[standard]  # Includes websockets, watchgod, etc.
+
+# === AI & NLP ===
+openai
+langchain
+langchain_openai
+langgraph
+langchain-community
+spacy
+sentence-transformers  # For semantic search and embeddings
+scikit-learn           # For keyword extraction, scoring, etc.
+nltk                   # Tokenization, stopwords, etc.
+
+# === PDF & Web Scraping ===
+pdfminer.six
+beautifulsoup4
+requests
+httpx  # Async alternative to requests
+playwright
+pypdf
+
+# === Data Handling ===
+pandas
+pydantic
+
+# === Environment & Config ===
+python-dotenv
+
+# === File Uploads & Templates ===
+python-multipart  # Required for FastAPI file uploads
+jinja2            # If rendering HTML templates
+
+# === Logging & Monitoring ===
+loguru
+
+# === Dev Tools ===
+pytest
+black
+isort
+
+# === Deployment ===
+gunicorn  # Optional: for production WSGI server
