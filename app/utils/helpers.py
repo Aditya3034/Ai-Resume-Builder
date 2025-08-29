@@ -83,25 +83,56 @@ def extract_github_data(github_url: str):
         "projects": projects
     }
 
-from playwright.sync_api import sync_playwright
+
+from playwright.async_api import async_playwright
 from langchain.schema import Document
 
-def scrape_portfolio(url: str) -> Document:
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True, args=["--disable-gpu", "--no-sandbox"])
-        context = browser.new_context()
-        page = context.new_page()
-
-        page.route("**/*", lambda route, request: 
-            route.abort() if request.resource_type in ["image", "stylesheet", "font"] else route.continue_()
+async def scrape_portfolio(url: str) -> Document:
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(
+            headless=True, 
+            args=["--disable-gpu", "--no-sandbox"]
         )
+        context = await browser.new_context()
+        page = await context.new_page()
 
-        page.goto(url, wait_until="domcontentloaded")
-        text = page.evaluate("document.body.innerText")
+        # Convert route handler to async function
+        async def route_intercept(route, request):
+            if request.resource_type in ["image", "stylesheet", "font"]:
+                await route.abort()
+            else:
+                await route.continue_()
 
-        browser.close()
+        await page.route("**/*", route_intercept)
+
+        await page.goto(url, wait_until="domcontentloaded")
+        text = await page.evaluate("document.body.innerText")
+
+        await browser.close()
 
     return Document(page_content=text.strip(), metadata={"source": url})
+
+
+# from playwright.sync_api import sync_playwright
+# from langchain.schema import Document
+# from playwright.async_api import async_playwright
+
+# def scrape_portfolio(url: str) -> Document:
+#     with sync_playwright() as p:
+#         browser = p.chromium.launch(headless=True, args=["--disable-gpu", "--no-sandbox"])
+#         context = browser.new_context()
+#         page = context.new_page()
+
+#         page.route("**/*", lambda route, request: 
+#             route.abort() if request.resource_type in ["image", "stylesheet", "font"] else route.continue_()
+#         )
+
+#         page.goto(url, wait_until="domcontentloaded")
+#         text = page.evaluate("document.body.innerText")
+
+#         browser.close()
+
+#     return Document(page_content=text.strip(), metadata={"source": url})
 
 import re
 
