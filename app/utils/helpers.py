@@ -228,7 +228,7 @@ def generate_resume_json(
     prompt = PromptTemplate.from_template(
         """You are an expert resume writer specializing in ATS-friendly formatting and keyword optimization.
 
-Using the following inputs, generate a complete resume in structured JSON format that matches the schema below. Be concise, impactful, and ensure the resume highlights relevant skills and achievements.
+Using the following inputs, generate a complete ATS friendly resume in structured JSON format that matches the schema below. Be concise, impactful, and ensure the resume highlights relevant skills and achievements mentioned in below details.
 
 Schema:
 {format_instructions}

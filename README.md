@@ -1,155 +1,222 @@
-Got it 👍 I’ll update your **README** so it reflects the **new FastAPI-based structure** you shared. Here’s the revised version you can copy:
+# Intelligent Resume Builder API
 
-````markdown
-# 🧠 Intelligent Resume Builder
-
-An open-source, multi-agent system that generates ATS-friendly resumes by intelligently aggregating user data from GitHub, portfolio websites, uploaded resumes, and job descriptions.  
-
-Built with **FastAPI**, **LangChain**, **LangGraph**, and **LLMs**, this tool empowers developers and job seekers to craft optimized, personalized resumes with minimal effort.
-
----
+An AI-powered FastAPI application that automatically generates ATS-friendly resumes by analyzing GitHub profiles, portfolio websites, and job descriptions using advanced natural language processing.
 
 ## 🚀 Features
 
-- 🔍 Extracts data from:
-  - GitHub profile
-  - Portfolio website
-  - Uploaded resume (PDF/DOC)
-  - Multiple job descriptions
-- 🧠 Multi-agent architecture with specialized agents
-- 📄 Generates ATS-optimized JSON resumes
-- 🎨 Renders into customizable templates
-- 🔁 Supports user feedback loop for iterative refinement
-- 🌐 REST API ready (FastAPI)
-- ⚡ Modular design for easy extension and integration
+- **GitHub Integration**: Extracts repository data, commit history, and project information
+- **Portfolio Analysis**: Scrapes personal websites and portfolios for additional context
+- **Job Description Parsing**: Identifies key skills and technologies from job postings
+- **Resume Generation**: Creates structured, ATS-optimized resumes using AI
+- **PDF Processing**: Converts existing resumes to text for analysis and improvement
+- **RESTful API**: Clean FastAPI interface with comprehensive endpoints
 
----
+## 🛠️ Technologies
 
-## 🗂️ Project Structure
+- **Backend**: FastAPI, Python 3.8+
+- **AI/ML**: OpenAI GPT-3.5-turbo, LangChain
+- **Web Scraping**: Playwright (async)
+- **Document Processing**: PyPDFLoader, PDFMiner
+- **Data Validation**: Pydantic
+- **HTTP Client**: Requests
+- **Environment**: python-dotenv
 
-### New Structure (FastAPI-based)
+## 📋 Prerequisites
 
-```plaintext
-resume-builder/
+- Python 3.8 or higher
+- OpenAI API key
+- GitHub Personal Access Token
+- Playwright browser dependencies
+
+## ⚙️ Installation
+
+1. **Clone the repository**
+```bash
+git clone <your-repo-url>
+cd intelligent-resume-builder
+```
+
+2. **Install dependencies**
+```bash
+pip install fastapi uvicorn openai langchain langchain-openai langchain-community
+pip install playwright beautifulsoup4 pdfminer.six python-dotenv requests pydantic
+```
+
+3. **Install Playwright browsers**
+```bash
+playwright install chromium
+```
+
+4. **Set up environment variables**
+Create a `.env` file in the root directory:
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+GITHUB_TOKEN=your_github_personal_access_token
+```
+
+## 🚀 Usage
+
+### Starting the Server
+
+```bash
+uvicorn main:app --reload
+```
+
+The API will be available at `http://localhost:8000`
+
+### API Documentation
+
+Interactive API documentation is available at:
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
+
+## 📚 API Endpoints
+
+### Main Resume Generation
+```http
+POST /generate-resume
+```
+**Form Data:**
+- `github_url` (optional): GitHub profile URL
+- `portfolio_url` (optional): Personal website URL  
+- `job_description` (optional): Target job description text
+- `old_resume` (optional): Existing resume PDF file
+- `user_feedback` (optional): Improvement suggestions
+- `user_additions` (optional): Additional information to include
+
+**Response:** Generated resume in structured JSON format
+
+### Testing Endpoints
+
+#### GitHub Data Extraction
+```http
+GET /test/github?url=https://github.com/username
+```
+
+#### Portfolio Scraping
+```http
+GET /test/portfolio?url=https://yourportfolio.com
+```
+
+#### Job Description Keywords
+```http
+POST /test/jd-keywords
+Content-Type: text/plain
+
+[Job description text]
+```
+
+#### PDF Text Extraction
+```http
+POST /test/pdf-to-text
+Content-Type: multipart/form-data
+
+file: [PDF file]
+```
+
+#### Direct Resume Generation
+```http
+POST /test/generate-resume
+Content-Type: application/json
+
+{
+  "github_data": "extracted github data",
+  "portfolio_data": "scraped portfolio content", 
+  "jd_keywords": ["python", "api", "fastapi"],
+  "old_resume": "existing resume text",
+  "user_additions": "additional info",
+  "user_feedback": "improvement requests"
+}
+```
+
+## 📁 Project Structure
+
+```
+intelligent-resume-builder/
+├── main.py              # FastAPI application and route definitions
 ├── app/
-│   ├── main.py              # FastAPI entry point
-│   ├── api/                 # API routes
-│   │   └── resume.py        # Endpoint for collecting user inputs
-│   ├── services/            # Business logic (agent orchestration)
-│   │   └── resume_service.py
-│   ├── agents/              # Your 5 specialized agents
-│   │   ├── github_agent.py
-│   │   ├── portfolio_agent.py
-│   │   ├── jd_keywords_agent.py
-│   │   ├── resume_parser_agent.py
-│   │   └── content_writer_agent.py
-│   ├── graph/               # LangGraph flow logic
-│   │   ├── flow.py
-│   │   └── nodes.py
-│   ├── templates/           # Resume templates
-│   │   └── resume_templates.json
-│   ├── models/              # Pydantic models
-│   │   └── resume_schema.py
-│   ├── utils/               # Helper functions
-│   │   └── helpers.py
-│   └── config.py            # App settings
-├── tests/                   # Unit and integration tests
-├── requirements.txt
-├── README.md
-└── .env
-````
-
-### Legacy Structure (standalone scripts, optional)
-
-```plaintext
-resume-builder/
-├── agents/                  # Individual agents for data extraction and generation
-├── graph/                   # LangGraph flow and node definitions
-├── data/                    # Input/output files
-├── templates/               # Resume layout templates
-├── utils/                   # Helper functions
-├── config/                  # API keys and settings
-├── tests/                   # Unit and integration tests
-├── ui/                      # Optional frontend
-├── main.py                  # Entry point
-├── requirements.txt
-├── .env
-└── README.md
+│   ├── utils/
+│   │   └── helpers.py   # Core utility functions
+│   └── workflow.py      # AI workflow orchestration
+├── .env                 # Environment variables (create this)
+├── requirements.txt     # Python dependencies
+└── README.md           # This file
 ```
 
----
+## 🔧 Core Functions
 
-## 🧩 Agent Overview
+### `extract_github_data(github_url)`
+Fetches repository information, commit counts, and project details from GitHub API.
 
-| Agent                     | Role                                    | Technology Used  |
-| ------------------------- | --------------------------------------- | ---------------- |
-| `github_agent.py`         | Extracts repo data from GitHub          | GitHub API       |
-| `portfolio_agent.py`      | Scrapes project info from portfolio     | BeautifulSoup    |
-| `jd_keywords_agent.py`    | Extracts keywords from job descriptions | spaCy / LLM      |
-| `resume_parser_agent.py`  | Parses uploaded resume files            | PDFMiner / LLM   |
-| `content_writer_agent.py` | Synthesizes final JSON resume           | Prompt-based LLM |
+### `scrape_portfolio(url)`  
+Uses Playwright to extract text content from portfolio websites asynchronously.
 
----
+### `extract_jd_keywords(jd)`
+Analyzes job descriptions using GPT-3.5-turbo to identify relevant skills and technologies.
 
-## 🔁 Flow Logic
+### `pdf_to_text(file)`
+Converts uploaded PDF resumes to text using PyPDFLoader for analysis.
 
-The system follows a directed flow using **LangGraph**:
+### `generate_resume_json(...)`
+Creates structured resume JSON using LangChain and OpenAI with proper ATS optimization.
 
-```
-GitHub → Portfolio → JD Keywords → Resume Parser → Content Writer
-```
+## 📊 Resume Output Schema
 
-A shared context object passes data between agents.
-Users can provide feedback to refine the resume, which re-triggers the content writer agent with updated instructions.
-
----
-
-## 🧾 Output Format
+The generated resume follows this structured format:
 
 ```json
 {
   "personal_info": {
-    "name": "Jane Doe",
-    "email": "jane@example.com",
-    "github": "https://github.com/janedoe",
-    "portfolio": "https://janedoe.dev"
+    "name": "...",
+    "email": "...",
+    "phone": "..."
   },
-  "summary": "Full-stack developer with 5+ years of experience...",
-  "skills": ["React", "Node.js", "Docker", "CI/CD"],
-  "experience": [...],
-  "education": [...],
-  "projects": [...],
-  "keywords": ["Agile", "REST APIs", "Leadership"]
+  "summary": "Professional summary...",
+  "skills": {
+    "frontend": ["React", "Vue.js"],
+    "backend": ["Python", "FastAPI"],
+    "devops": ["Docker", "AWS"],
+    "cloud": ["AWS", "Azure"],
+    "ai_ml": ["TensorFlow", "OpenAI"],
+    "tools": ["Git", "VS Code"]
+  },
+  "experience": [
+    {
+      "title": "Software Engineer",
+      "company": "Company Name",
+      "duration": "2020-2023",
+      "location": "City, State",
+      "bullets": ["Achievement 1", "Achievement 2"]
+    }
+  ],
+  "education": ["Degree details"],
+  "projects": [
+    {
+      "name": "Project Name",
+      "commits": 45,
+      "description": "Project description",
+      "bullets": ["Feature 1", "Feature 2"]
+    }
+  ],
+  "keywords": ["extracted", "keywords", "list"]
 }
 ```
 
----
+## 🔒 Security Notes
 
-## 🛠️ Getting Started
+- Store API keys securely in environment variables
+- GitHub token should have minimal required permissions
+- Validate all user inputs before processing
+- Consider rate limiting for production deployments
 
-### 1. Clone the Repository
+## 🐛 Troubleshooting
 
+**Playwright Issues:**
 ```bash
-git clone https://github.com/your-username/resume-builder.git
-cd resume-builder
+# Reinstall browser dependencies
+playwright install --force chromium
 ```
 
-### 2. Set Up Environment
-
-```bash
-python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-python -m spacy download en_core_web_sm
-```
-
-### 3. Run the FastAPI App
-
-```bash
-uvicorn app.main:app --reload
-```
-
-The API will be available at: [http://localhost:8000](http://localhost:8000)
-Docs will be auto-generated at: [http://localhost:8000/docs](http://localhost:8000/docs)
-
----
+**OpenAI API Errors:**
+- Verify API key is valid and has sufficient credits
+- Check rate limits and quotas
